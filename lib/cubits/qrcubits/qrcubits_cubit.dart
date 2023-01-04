@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crud/models/participant_model.dart';
 import 'package:firebase_crud/repos/qrscanrepo.dart';
 import 'package:meta/meta.dart';
 
@@ -15,12 +16,13 @@ class QrcubitsCubit extends Cubit<QrcubitsState> {
     try{
       emit(QrcubitsLoading());
      var responce =  await QrScanRepo.getdata(code);
-      print(jsonEncode(responce));
-
-      print(responce.docs.first.data());
-      emit(QrcubitsLoaded(data: responce));
-
-
+     if(responce.docs.isNotEmpty){
+       var model=ParticipantModel.fromJson(responce.docs.first.data());
+       emit(QrcubitsLoaded(data: model));
+     }
+     else{
+       throw Exception("no result found");
+     }
 
     }catch(e)
     {
@@ -31,6 +33,9 @@ class QrcubitsCubit extends Cubit<QrcubitsState> {
       if( e is SocketException)
       {
         emit(QrcubitsError(err: e.message.toString()));
+      }
+      else{
+        emit(QrcubitsError(err: e.toString()));
       }
     }
   }

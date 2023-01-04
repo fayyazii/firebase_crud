@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QrScanRepo {
@@ -6,6 +9,7 @@ class QrScanRepo {
         .collection('qrscan')
         .where("code", isEqualTo: mycode)
         .get();
+
     return code;
 
   }

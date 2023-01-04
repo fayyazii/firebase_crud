@@ -17,7 +17,7 @@ class _QrScannerState extends State<QrScanner> {
   final txtcontroller = TextEditingController();
   @override
   void initState() {
-    context.read<QrcubitsCubit>().getdata(txtcontroller.text);
+
     super.initState();
   }
 
@@ -52,82 +52,72 @@ class _QrScannerState extends State<QrScanner> {
       ),
       body: BlocBuilder<QrcubitsCubit, QrcubitsState>(
         builder: (context, state) {
-          if(state is QrcubitsLoading)
-            {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          if(state is QrcubitsError)
-            {
-              return Center(
-                child: Text(state.err),
-              );
-            }
-          if(state is QrcubitsLoaded) {
-
-            return Column(
-            children: [
-              SizedBox(height: 20,),
-              TextField(
-
-                readOnly: true,
-                controller: txtcontroller,
-                decoration:  InputDecoration(
-                  suffixIcon: InkWell(
-                    onTap: (){
-                      scanqr();
-                    },
-                      child: Icon(Icons.document_scanner)),
-                  hintText: "qrscan",
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  borderSide: BorderSide(
-                    style: BorderStyle.none
-                  ),
-                  ),
-                ),
+          if(state is QrcubitsInitial){
+            return SizedBox(
+              height: MediaQuery.of(context).size.height*0.6,
+              child:const  Center(
+                child: Text("Scan QR code"),
               ),
-              const SizedBox(height: 20,),
-              // Container(
-              //   height: 50,
-              //   width: 200,
-              //   decoration: const BoxDecoration(
-              //     color: Colors.orange,
-              //     borderRadius: BorderRadius.all(Radius.circular(10))
-              //   ),
-              //   child: Align(
-              //     alignment: Alignment.center,
-              //     child: Text(state.data ? "QrCode Matched"
-              //         : "Not Matched",
-              //     style: const TextStyle(
-              //       //fontWeight: FontWeight.bold,
-              //       fontSize: 24,
-              //       color: Colors.white
-              //     ),),
-              //   ),
-              // ),
+            );
+          }
+          if(state is QrcubitsLoading)
+          {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if(state is QrcubitsError)
+          {
+            return Center(
+              child: Text(state.err),
+            );
+          }
+          if(state is QrcubitsLoaded) {
+            return Center(
+              child: Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                children: [
+                 const SizedBox(height: 20,),
+                  Center(
+                    child: Text("code: "+state.data.code),
+                  ),
+                  const SizedBox(height: 20,),
+                   Center(
+                    child: Text("Name: ${state.data.name}"),
+                  ),
+                  const SizedBox(
+                   height: 20,
+                  ),
+                  Center(
+                    child: Text("Participant: ${state.data.participant}"),
+                  ),
+                  // Container(
+                  //   height: 50,
+                  //   width: 200,
+                  //   decoration: const BoxDecoration(
+                  //     color: Colors.orange,
+                  //     borderRadius: BorderRadius.all(Radius.circular(10))
+                  //   ),
+                  //   child: Align(
+                  //     alignment: Alignment.center,
+                  //     child: Text(state.data ? "QrCode Matched"
+                  //         : "Not Matched",
+                  //     style: const TextStyle(
+                  //       //fontWeight: FontWeight.bold,
+                  //       fontSize: 24,
+                  //       color: Colors.white
+                  //     ),),
+                  //   ),
+                  // ),
 
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 100),
-                child: MaterialButton(
-                  height: 40,
-
-                  color: Colors.orange,
-                  onPressed: () {
-                  scanqr();
-                },
-                  child: const Align(
-                      alignment: Alignment.center,
-                      child: Text("Scan QR Code",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                      ),)),
-                ),
-              )
-            ],
-          );
+                 const SizedBox(
+                   height: 20,
+                 )
+                ],
+          ),
+              ),
+            );
           }
           else
             {

@@ -6,7 +6,7 @@ abstract class QrcubitsState {}
 class QrcubitsInitial extends QrcubitsState {}
 class QrcubitsLoading extends QrcubitsState {}
 class QrcubitsLoaded extends QrcubitsState {
-  var data ;
+  ParticipantModel data ;
   QrcubitsLoaded({required this.data});
 }
 class QrcubitsError extends QrcubitsState {
